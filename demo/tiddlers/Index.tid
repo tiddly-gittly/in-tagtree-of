@@ -3,6 +3,10 @@ type: text/vnd.tiddlywiki
 
 {{$:/plugins/linonetwo/in-tagtree-of/readme}}
 
+Available in [[CPL|https://tw-cpl.netlify.app/#Plugin_202303045249238]]
+
+Github: https://github.com/tiddly-gittly/in-tagtree-of
+
 !! interactive examples
 
 {{Simpsons family tree}}
@@ -44,3 +48,9 @@ type: text/vnd.tiddlywiki
 ''Check if selected tiddler is a child of Clancy or is Clancy itself (To test the `inclusive` suffix)'':
 <$list filter="[{$:/temp/tree-select}!is[blank]else[Clancy]in-tagtree-of:inclusive[Clancy]]" template="$:/core/ui/ListItemTemplate" emptyMessage="none"/>
 ```
+
+!! How it works?
+
+It uses `$tw.wiki.getGlobalCache("in-tagtree-of-xxx")` to avoid unnecessary calculation (learnt from [[kin-filter|https://github.com/bimlas/tw5-kin-filter/blob/master/plugins/kin-filter/kin.js]]).
+
+And just do normal DFS graph algorithm inside (learnt from [[taggingtree|https://talk.tiddlywiki.org/t/recursive-filter-operators-to-show-all-tiddlers-beneath-a-tag-and-all-tags-above-a-tiddler/3814]])

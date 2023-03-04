@@ -19,3 +19,7 @@ See [[demo site|https://tiddly-gittly.github.io/in-tagtree-of/]] for interactive
 !!! Advanced usage
 
 `[all[tiddlers]in-tagtree-of:inclusive[Clancy]]` : with `inclusive` suffix, get all tiddlers that are ''in a tag tree'' with `Clancy` as root, ''including `Clancy` himself''
+
+!! Difference from taggingtree
+
+[[taggingtree|https://talk.tiddlywiki.org/t/recursive-filter-operators-to-show-all-tiddlers-beneath-a-tag-and-all-tags-above-a-tiddler/3814]] is a [[Selection Constructors|https://tiddlywiki.com/#Selection%20Constructors]], thus can not be used in cascade or FileSystemPaths. See [[How to test filesystempath easily|https://talk.tiddlywiki.org/t/how-to-test-filesystempath-easily/6353]] for details.
