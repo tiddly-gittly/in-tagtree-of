@@ -1,8 +1,46 @@
 title: Index
 type: text/vnd.tiddlywiki
 
-{{$:/snippets/minilanguageswitcher}}
+{{$:/plugins/linonetwo/in-tagtree-of/readme}}
 
-Some readme here.
+!! interactive examples
 
-<$example-widget />
+{{Simpsons family tree}}
+
+<$select tiddler="$:/temp/tree-select" default="Ling">
+  <$list filter="[tag[TreeExample]]">
+    <option value=<<currentTiddler>> ><<currentTiddler>></option>
+  </$list>
+</$select>
+
+''Check if selected tiddler is child of Clancy'':
+<$list filter="[{$:/temp/tree-select}!is[blank]else[Ling]in-tagtree-of[Clancy]]" template="$:/core/ui/ListItemTemplate" emptyMessage="none"/>
+
+''Check if Ling is child of Clancy (To test the triggering of cache)'':
+<$list filter="[[Ling]in-tagtree-of[Clancy]]" template="$:/core/ui/ListItemTemplate" emptyMessage="none"/>
+
+''Check if selected tiddler is not a child of Clancy (To test the `!` prefix)'':
+<$list filter="[{$:/temp/tree-select}!is[blank]else[Herb]!in-tagtree-of[Clancy]]" template="$:/core/ui/ListItemTemplate" emptyMessage="none"/>
+
+''Check if selected tiddler is a child of Clancy or is Clancy itself (To test the `inclusive` suffix)'':
+<$list filter="[{$:/temp/tree-select}!is[blank]else[Clancy]in-tagtree-of:inclusive[Clancy]]" template="$:/core/ui/ListItemTemplate" emptyMessage="none"/>
+
+```tw5
+<$select tiddler="$:/temp/tree-select" default="Homer">
+  <$list filter="[tag[TreeExample]]">
+    <option value=<<currentTiddler>>><<currentTiddler>></option>
+  </$list>
+</$select>
+
+''Check if selected tiddler is child of Clancy'':
+<$list filter="[{$:/temp/tree-select}!is[blank]else[Ling]in-tagtree-of[Clancy]]" template="$:/core/ui/ListItemTemplate" emptyMessage="none"/>
+
+''Check if Ling is child of Clancy (To test the triggering of cache)'':
+<$list filter="[[Ling]in-tagtree-of[Clancy]]" template="$:/core/ui/ListItemTemplate" emptyMessage="none"/>
+
+''Check if Herb is not a child of Clancy (To test the `!` prefix)'':
+<$list filter="[{$:/temp/tree-select}!is[blank]else[Herb]!in-tagtree-of[Clancy]]" template="$:/core/ui/ListItemTemplate" emptyMessage="none"/>
+
+''Check if selected tiddler is a child of Clancy or is Clancy itself (To test the `inclusive` suffix)'':
+<$list filter="[{$:/temp/tree-select}!is[blank]else[Clancy]in-tagtree-of:inclusive[Clancy]]" template="$:/core/ui/ListItemTemplate" emptyMessage="none"/>
+```

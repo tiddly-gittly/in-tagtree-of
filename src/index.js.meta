@@ -1,5 +1,4 @@
 creator: LinOnetwo
-title: $:/plugins/linonetwo/tw-example-plugin/widget.js
+title: $:/plugins/linonetwo/in-tagtree-of/index.js
 type: application/javascript
-module-type: widget
-hide-body: yes
+module-type: filteroperator

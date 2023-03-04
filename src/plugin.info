@@ -1,7 +1,7 @@
 {
-  "title": "$:/plugins/linonetwo/tw-example-plugin",
+  "title": "$:/plugins/linonetwo/in-tagtree-of",
   "author": "LinOnetwo",
-  "description": "put your description here, and fill in the author and title above",
+  "description": "Finds out where a tiddler originates from, is it in a tag tree with xxx as root?",
   "core-version": ">=5.1.22",
   "plugin-type": "plugin",
   "version": "0.0.1",
