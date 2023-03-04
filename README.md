@@ -1,4 +1,4 @@
-# Typescript plugin template for TiddlyWiki5
+# Fask "in TagTree of" check for TiddlyWiki5
 
 A very fast version of `kin::to[xxx]`.
 
