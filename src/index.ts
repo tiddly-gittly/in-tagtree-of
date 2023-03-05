@@ -7,7 +7,7 @@
   - https://talk.tiddlywiki.org/t/recursive-filter-operators-to-show-all-tiddlers-beneath-a-tag-and-all-tags-above-a-tiddler/3814
 */
 
-import type { IFilterOperator, IFilterOperatorParameterOperator, SourceIterator, Tiddler } from 'tw5-typed';
+import type { IFilterOperator, IFilterOperatorParameterOperator, SourceIterator, Tiddler } from 'tiddlywiki';
 
 declare const exports: Record<string, IFilterOperator>;
 exports['in-tagtree-of'] = function inTagTreeOfFilterOperator(
@@ -24,21 +24,42 @@ exports['in-tagtree-of'] = function inTagTreeOfFilterOperator(
    * If add `!` prefix, means output the input if input is not in rootTiddlerChildren
    */
   const isNotInTagTreeOf = operator.prefix === '!';
-  const rootTiddlerChildren = $tw.wiki.getGlobalCache(`in-tagtree-of-${rootTiddler}-${isInclusive ? 'includeRoot' : 'excludeRoot'}`, () => {
-    const results: string[] = [];
-    getTiddlersRecursively(rootTiddler, results);
-    if (isInclusive) {
-      return [rootTiddler, ...results];
-    }
-    return results;
-  });
+
+  const sourceTiddlers: string[] = [];
+  let firstTiddler: Tiddler | undefined;
   const sourceTiddlerCheckedToBeChildrenOfRootTiddler: string[] = [];
   source((tiddler: Tiddler, title: string) => {
+    sourceTiddlers.push(title);
+    if (firstTiddler === undefined) {
+      firstTiddler = tiddler;
+    }
+  });
+
+  // optimize for fileSystemPath and cascade usage, where input will only be one tiddler, and often is just tagged with the rootTiddler
+  if (sourceTiddlers.length === 1 && !isNotInTagTreeOf) {
+    const [theOnlyTiddlerTitle] = sourceTiddlers;
+    if (firstTiddler?.fields?.tags?.includes(rootTiddler) === true) {
+      return [theOnlyTiddlerTitle];
+    }
+    if (isInclusive && theOnlyTiddlerTitle === rootTiddler) {
+      return [theOnlyTiddlerTitle];
+    }
+  }
+
+  let rootTiddlerChildren = $tw.wiki.getGlobalCache(`in-tagtree-of-${rootTiddler}`, () => {
+    const results: string[] = [];
+    getTiddlersRecursively(rootTiddler, results);
+    return results;
+  });
+
+  rootTiddlerChildren = isInclusive ? [...rootTiddlerChildren, rootTiddler] : rootTiddlerChildren;
+  sourceTiddlers.forEach((title) => {
     // start the recursion for this title
     if (rootTiddlerChildren.includes(title) !== isNotInTagTreeOf) {
       sourceTiddlerCheckedToBeChildrenOfRootTiddler.push(title);
     }
   });
+
   return sourceTiddlerCheckedToBeChildrenOfRootTiddler;
 };
 
