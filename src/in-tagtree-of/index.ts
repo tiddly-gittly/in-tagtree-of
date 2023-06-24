@@ -25,18 +25,18 @@ exports['in-tagtree-of'] = function inTagTreeOfFilterOperator(
    */
   const isNotInTagTreeOf = operator.prefix === '!';
 
-  const sourceTiddlers: string[] = [];
+  const sourceTiddlers = new Set<string>();
   let firstTiddler: Tiddler | undefined;
-  const sourceTiddlerCheckedToBeChildrenOfRootTiddler: string[] = [];
+  const sourceTiddlerCheckedToBeChildrenOfRootTiddler = new Set<string>();
   source((tiddler: Tiddler, title: string) => {
-    sourceTiddlers.push(title);
+    sourceTiddlers.add(title);
     if (firstTiddler === undefined) {
       firstTiddler = tiddler;
     }
   });
 
   // optimize for fileSystemPath and cascade usage, where input will only be one tiddler, and often is just tagged with the rootTiddler
-  if (sourceTiddlers.length === 1 && !isNotInTagTreeOf) {
+  if (sourceTiddlers.size === 1 && !isNotInTagTreeOf) {
     const [theOnlyTiddlerTitle] = sourceTiddlers;
     if (firstTiddler?.fields?.tags?.includes(rootTiddler) === true) {
       return [theOnlyTiddlerTitle];
@@ -58,11 +58,11 @@ exports['in-tagtree-of'] = function inTagTreeOfFilterOperator(
   sourceTiddlers.forEach((title) => {
     // start the recursion for this title
     if (rootTiddlerChildren.has(title) !== isNotInTagTreeOf) {
-      sourceTiddlerCheckedToBeChildrenOfRootTiddler.push(title);
+      sourceTiddlerCheckedToBeChildrenOfRootTiddler.add(title);
     }
   });
 
-  return sourceTiddlerCheckedToBeChildrenOfRootTiddler;
+  return [...sourceTiddlerCheckedToBeChildrenOfRootTiddler];
 };
 
 function getTiddlersRecursively(title: string, results: Set<string>) {
