@@ -27,7 +27,6 @@ exports['in-tagtree-of'] = function inTagTreeOfFilterOperator(
 
   const sourceTiddlers = new Set<string>();
   let firstTiddler: Tiddler | undefined;
-  const sourceTiddlerCheckedToBeChildrenOfRootTiddler = new Set<string>();
   source((tiddler: Tiddler, title: string) => {
     sourceTiddlers.add(title);
     if (firstTiddler === undefined) {
@@ -55,14 +54,12 @@ exports['in-tagtree-of'] = function inTagTreeOfFilterOperator(
   if (isInclusive) {
     rootTiddlerChildren.add(rootTiddler);
   }
-  sourceTiddlers.forEach((title) => {
-    // start the recursion for this title
-    if (rootTiddlerChildren.has(title) !== isNotInTagTreeOf) {
-      sourceTiddlerCheckedToBeChildrenOfRootTiddler.add(title);
-    }
-  });
-
-  return [...sourceTiddlerCheckedToBeChildrenOfRootTiddler];
+  if (isNotInTagTreeOf) {
+    const sourceTiddlerCheckedToNotBeChildrenOfRootTiddler: string[] = [...sourceTiddlers].filter(title => !rootTiddlerChildren.has(title));
+    return sourceTiddlerCheckedToNotBeChildrenOfRootTiddler;
+  }
+  const sourceTiddlerCheckedToBeChildrenOfRootTiddler: string[] = [...sourceTiddlers].filter(title => rootTiddlerChildren.has(title));
+  return sourceTiddlerCheckedToBeChildrenOfRootTiddler;
 };
 
 function getTiddlersRecursively(title: string, results: Set<string>) {
