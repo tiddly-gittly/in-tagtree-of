@@ -4,6 +4,6 @@
   "description": "Finds out where a tiddler originates from, is it in a tag tree with xxx as root?",
   "core-version": ">=5.1.22",
   "plugin-type": "plugin",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "list": "readme"
 }
