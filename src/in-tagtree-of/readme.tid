@@ -20,6 +20,16 @@ See [[demo site|https://tiddly-gittly.github.io/in-tagtree-of/]] for interactive
 
 `[all[tiddlers]in-tagtree-of:inclusive[Clancy]]` : with `inclusive` suffix, get all tiddlers that are ''in a tag tree'' with `Clancy` as root, ''including `Clancy` himself''
 
+!!! With macro
+
+```tw5
+<!-- for each child (in tagtree of current tiddler), remove out all that is not leaf, and get those is in new task state -->
+\define get-non-completed-leaf-tasks() [in-tagtree-of<currentTiddler>!filter<filter-is-not-leaf>filter<filter-is-new-task>]
+
+\define caption() ToDos <$count filter=<<get-non-completed-leaf-tasks>> />
+<$macrocall $name=aggregation caption=<<caption>> filter=<<get-non-completed-leaf-tasks>> defaultFields="title tags" class="w-100" state="ITKG-TaskDynamicTable-state" />
+```
+
 !! Difference from taggingtree
 
 [[taggingtree|https://talk.tiddlywiki.org/t/recursive-filter-operators-to-show-all-tiddlers-beneath-a-tag-and-all-tags-above-a-tiddler/3814]] is a [[Selection Constructors|https://tiddlywiki.com/#Selection%20Constructors]], thus can not be used in cascade or FileSystemPaths. See [[How to test filesystempath easily|https://talk.tiddlywiki.org/t/how-to-test-filesystempath-easily/6353]] for details.
