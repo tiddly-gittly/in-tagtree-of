@@ -46,16 +46,18 @@ exports['in-tagtree-of'] = function inTagTreeOfFilterOperator(
     }
   }
 
-  let rootTiddlerChildren = $tw.wiki.getGlobalCache(`in-tagtree-of-${rootTiddler}`, () => {
-    const results: string[] = [];
+  const rootTiddlerChildren = $tw.wiki.getGlobalCache(`in-tagtree-of-${rootTiddler}`, () => {
+    const results = new Set<string>();
     getTiddlersRecursively(rootTiddler, results);
     return results;
   });
 
-  rootTiddlerChildren = isInclusive ? [...rootTiddlerChildren, rootTiddler] : rootTiddlerChildren;
+  if (isInclusive) {
+    rootTiddlerChildren.add(rootTiddler);
+  }
   sourceTiddlers.forEach((title) => {
     // start the recursion for this title
-    if (rootTiddlerChildren.includes(title) !== isNotInTagTreeOf) {
+    if (rootTiddlerChildren.has(title) !== isNotInTagTreeOf) {
       sourceTiddlerCheckedToBeChildrenOfRootTiddler.push(title);
     }
   });
@@ -63,34 +65,30 @@ exports['in-tagtree-of'] = function inTagTreeOfFilterOperator(
   return sourceTiddlerCheckedToBeChildrenOfRootTiddler;
 };
 
-function getTiddlersRecursively(title: string, results: string[]) {
+function getTiddlersRecursively(title: string, results: Set<string>) {
   // get tagging[] list at this level
-  const intermediate = $tw.wiki.getTiddlersWithTag(title);
-  let t;
-  let p;
-  // remove any that are already in the results array to avoid loops
+  const intermediate = new Set<string>($tw.wiki.getTiddlersWithTag(title));
+  // remove any TiddlersWithTag in intermediate that are already in the results set to avoid loops
   // code adapted from $tw.utils.pushTop
-  if (intermediate.length > 0) {
-    if (results.length > 0) {
-      if (results.length < intermediate.length) {
-        for (t = 0; t < results.length; t++) {
-          p = intermediate.indexOf(results[t]);
-          if (p !== -1) {
-            intermediate.splice(p, 1);
+  if (intermediate.size > 0) {
+    if (results.size > 0) {
+      if (results.size < intermediate.size) {
+        results.forEach(alreadyExisted => {
+          if (intermediate.has(alreadyExisted)) {
+            intermediate.delete(alreadyExisted);
           }
-        }
+        });
       } else {
-        for (t = intermediate.length - 1; t >= 0; t--) {
-          p = results.indexOf(intermediate[t]);
-          if (p !== -1) {
-            intermediate.splice(t, 1);
+        intermediate.forEach(alreadyExisted => {
+          if (results.has(alreadyExisted)) {
+            intermediate.delete(alreadyExisted);
           }
-        }
+        });
       }
     }
     // add the remaining intermediate results and traverse the hierarchy further
-    $tw.utils.pushTop(results, intermediate);
-    intermediate.forEach(function (title) {
+    intermediate.forEach((title) => results.add(title));
+    intermediate.forEach((title) => {
       getTiddlersRecursively(title, results);
     });
   }
