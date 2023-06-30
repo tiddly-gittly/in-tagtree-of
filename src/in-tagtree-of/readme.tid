@@ -2,6 +2,46 @@ title: $:/plugins/linonetwo/in-tagtree-of/readme
 creator: LinOnetwo
 type: text/vnd.tiddlywiki
 
+<$list filter="[[$:/language]get[text]removeprefix[$:/languages/]else[en-GB]]" variable="lang">
+
+	<$list filter="[<lang>search[zh]]">
+
+一个非常快速的`kin::to[xxx]`的版本。
+
+> 找出一个tiddler的来源，它是否在以xxx为根的标签树中？
+
+!! 用法
+
+参见[[演示网站|https://tiddly-gittly.github.io/in-tagtree-of/]]的交互式例子。
+
+!!! 正常用法
+
+`[[Ling]in-tagtree-of[Clancy]]`：检查`Ling`是否在以`Clancy`为根的标签树中。
+
+`[all[tiddlers]!in-tagtree-of[Clancy]]`：使用`!`前缀，获得所有不在以`Clancy`为根的标签树中的条目。
+
+!!! 高级用法
+
+`[all[tiddlers]in-tagtree-of:inclusive[Clancy]]`：以`inclusive`为后缀，获得所有在以`Clancy`为根的标签树中的条目，包括`Clancy`本人
+
+!!! 使用宏
+
+```tw5
+<!-- 对于每个孩子（在当前条目的tagtree中），移除所有不是叶子的，并获得那些处于新任务状态的孩子-->。
+\define get-non-completed-leaf-tasks() [in-tagtree-of<currentTiddler>! filter<filter-is-not-leaf>filter<filter-is-new-task>]
+
+\define caption() ToDos <$count filter=<<get-non-completed-leaf-tasks>> />
+<$macrocall $name=aggregation caption=<<caption>> filter=<<get-non-completed-leaf-tasks>> defaultFields="title tags" class="w-100" state="ITKG-TaskDynamicTable-state" />
+```
+
+!! 与taggingtree的区别
+
+[[taggingtree|https://talk.tiddlywiki.org/t/recursive-filter-operators-to-show-all-tiddlers-beneath-a-tag-and-all-tags-above-a-tiddler/3814]]是[[选择构造器|https://tiddlywiki.com/#Selection%20Constructors]]，因此不能用于级联或FileSystemPaths。详见[[如何轻松测试filesystempath|https://talk.tiddlywiki.org/t/how-to-test-filesystempath-easily/6353]]。
+
+	</$list>
+
+	<$list filter="[<lang>!search[zh]]">
+
 A very fast version of `kin::to[xxx]`.
 
 > Finds out where a tiddler originates from, is it in a tag tree with xxx as root?
@@ -33,3 +73,7 @@ See [[demo site|https://tiddly-gittly.github.io/in-tagtree-of/]] for interactive
 !! Difference from taggingtree
 
 [[taggingtree|https://talk.tiddlywiki.org/t/recursive-filter-operators-to-show-all-tiddlers-beneath-a-tag-and-all-tags-above-a-tiddler/3814]] is a [[Selection Constructors|https://tiddlywiki.com/#Selection%20Constructors]], thus can not be used in cascade or FileSystemPaths. See [[How to test filesystempath easily|https://talk.tiddlywiki.org/t/how-to-test-filesystempath-easily/6353]] for details.
+
+	</$list>
+
+</$list>

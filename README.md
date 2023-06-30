@@ -1,3 +1,5 @@
+[English](/README.md) | [中文](/README_zh-CN.md)
+
 # Fask "in TagTree of" check for TiddlyWiki5
 
 A very fast version of `kin::to[xxx]`.
