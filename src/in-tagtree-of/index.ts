@@ -36,7 +36,7 @@ exports['in-tagtree-of'] = function inTagTreeOfFilterOperator(
 
   // optimize for fileSystemPath and cascade usage, where input will only be one tiddler, and often is just tagged with the rootTiddler
   if (sourceTiddlers.size === 1 && !isNotInTagTreeOf) {
-    const [theOnlyTiddlerTitle] = sourceTiddlers;
+    const [theOnlyTiddlerTitle] = sourceTiddlers
     if (firstTiddler?.fields?.tags?.includes(rootTiddler) === true) {
       return [theOnlyTiddlerTitle];
     }
